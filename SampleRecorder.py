@@ -1,39 +1,76 @@
-import pyaudio
+from pyaudio import paInt16, PyAudio
+from threading import Event, Thread
+from uuid import uuid1
 import wave
 
+
 CHUNK = 1024
-FORMAT = pyaudio.paInt16
+FORMAT = paInt16
 CHANNELS = 2
 RATE = 44100
-RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "output.wav"
 
-p = pyaudio.PyAudio()
 
-stream = p.open(format=FORMAT,
-                channels=CHANNELS,
-                rate=RATE,
-                input=True,
-                frames_per_buffer=CHUNK)
+class Recorder(Thread):
+    '''
+    A thread which records audio as its activity.
 
-print("* recording")
+    self.p: pyaudio.PyAudio :: a PyAudio instance
+    self.frames: A list of audio frames
 
-frames = []
+    self._stop: threading.Event :: when set the thread will stop recording
+    self._stream :: a PyAudio stream which to record from
+    '''
+    def __init__(self, flag):
+        Thread.__init__(self)
+        '''
+        flag: a flag when set will stop the recording
+        '''
+        self._stopFlag = flag
+        self.frames = []
 
-for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-    data = stream.read(CHUNK)
-    frames.append(data)
+        self.p = PyAudio()
+        self._stream = self.p.open(format=FORMAT,
+                                    channels=CHANNELS,
+                                    rate=RATE,
+                                    input=True,
+                                    frames_per_buffer=CHUNK)
 
-print("* done recording")
+    def run(self):
+        print("* recording")
+        while not self._stopFlag.is_set():
+            data = self._stream.read(CHUNK)
+            self.frames.append(data)
+        self._stream.stop_stream()
+        self._stream.close()
+        self.p.terminate()
+        print("* done recording")
 
-stream.stop_stream()
-stream.close()
-p.terminate()
 
-wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-wf.setnchannels(CHANNELS)
-wf.setsampwidth(p.get_sample_size(FORMAT))
-wf.setframerate(RATE)
-wf.writeframes(b''.join(frames))
-wf.close()
+if __name__ == '__main__':
+    stopFlag = Event()
+    while True:
+        try:
+            stopFlag.clear()
+            input("Press enter to start recording")
+
+            recorder = Recorder(stopFlag)
+            recorder.start()
+
+            input("Press enter to stop recording")
+            stopFlag.set()
+            recorder.join()
+
+            print("Saving...")
+            filename = f'{uuid1()}.wav'
+            wf = wave.open(filename, 'wb')
+            wf.setnchannels(CHANNELS)
+            wf.setsampwidth(recorder.p.get_sample_size(FORMAT))
+            wf.setframerate(RATE)
+            wf.writeframes(b''.join(recorder.frames))
+            wf.close()
+            print("Saved")
+        except KeyboardInterrupt:
+            print("Exitting...")
+            break
+
 
