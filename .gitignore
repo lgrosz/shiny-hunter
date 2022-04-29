@@ -2,3 +2,5 @@ tags
 tags.*
 
 __pycache__/
+
+*.wav
