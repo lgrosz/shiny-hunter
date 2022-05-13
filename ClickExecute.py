@@ -1,5 +1,3 @@
-from detect import detect
-from pick import pick
 from time import sleep
 import click
 import gi
@@ -8,7 +6,7 @@ import pickle
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
-from util import variance as aVariance
+from util import variance as aVariance, detect, pick
 
 
 @click.option('--identifier_variance', type=int, default=1000, show_default=True, help='Allowed color variance. NOT IMPLEMENTED.')
@@ -27,7 +25,7 @@ def execute(identifier_variance, shiny_variance, debounce, file):
         click.echo('Resolving identifers...')
         for i in identifiers:
             pos, color = i
-            detect(pos, color, variance=identifier_variance)
+            detect(pos, color, _variance=identifier_variance)
 
         click.echo('Delaying for shiny pick...')
         sleep(delay)

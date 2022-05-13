@@ -6,9 +6,7 @@ import pickle
 
 from ClickExecute import execute
 from ClickRecord import record
-from detect import detect as aDetect
-from pick import pick as aPick
-from util import variance as aVariance
+from util import variance as aVariance, pick as aPick, detect as aDetect
 
 @click.group()
 def cli():
