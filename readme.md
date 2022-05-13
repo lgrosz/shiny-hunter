@@ -1,28 +1,126 @@
 # Build
 No build, just run the python scripts.
 
-# Dependancies
-
-- [nxbt](https://github.com/Brikwerk/nxbt)
-- pyaudio
-
 # Usage
-## Sample recorder
-The usage of the sample recorder should be self-explanitory. Simply run
-`python3 SampleRecorder.py` and follow the prompts. It should exit relatively
-gracefully via a keyboard interrupt.
+## Setup
+- Setup OBS with Switch on a given screen
 
-The sample recorder saves `.wav` files to the current working directory as
-`<uuidv1>.wav`. This meant they should be time-sortable.
+# TODO
+- Record video with my setup so I don't have to explain or forget it
 
-## Shiny hunter
-Not worth writing the docs on this poorly working prototype, just read the
-code.
+# Imperical variance analysis
+Variance bounds:
+```
+$ cli variance '#fff' '#fff'
+0
+$ cli variance '#fff' '#000'
+195075
+```
 
-# Common issues
-- I had a lot of trouble getting a stock Raspberry Pi 4 to reliably make a
-  connection with `nxbt`. While it broke wifi connectivity, installing
-  `connman` seemed to resolve this issue.
-- Running `systemctl stop bluetooth.service` then starting the script worked
-  well as well.
+By picking the tuft above Shaymin's forehead vs its shiny:
+```
+$ cli pick --cformat hex
+Click to pick a color
+position=(1757, 1933)
+color=#b0da76
+
+$ cli pick --cformat hex
+Click to pick a color
+position=(2016, 1930)
+color=#71d9c3
+
+$ cli variance '#b0da76' '#71d9c3'
+9899
+```
+
+By picking a slightly different spot on the same non-shiny shaymin...
+```
+$ cli pick --cformat hex
+Click to pick a color
+position=(1747, 1926)
+color=#bee880
+
+$ cli variance '#b0da76' '#bee880'
+492
+```
+
+By picking the flower on shaymin:
+```
+$ cli pick --cformat hex
+Click to pick a color
+position=(1813, 1936)
+color=#c5707a
+
+$ cli pick --cformat hex
+Click to pick a color
+position=(2072, 1938)
+color=#b2665b
+
+$ cli variance '#c5707a' '#b2665b'
+1422
+```
+
+Picking Darkrai's left shoulder
+```
+
+$ cli pick --cformat hex
+Click to pick a color
+position=(1792, 1934)
+color=#434647
+
+$ cli pick --cformat hex
+Click to pick a color
+position=(2056, 1934)
+color=#312a43
+
+$ cli variance '#434647' '#312a43'
+1124
+```
+
+Picking  Darkrai's chin(?)
+```
+$ cli pick --cformat hex
+Click to pick a color
+position=(1747, 1943)
+color=#841822
+
+$ cli pick --cformat hex
+Click to pick a color
+position=(2008, 1943)
+color=#812955
+$ cli variance '#841822' '#812955'
+2899
+```
+
+So basically, the variance may need to be adapted based on the Pokemon, but a
+threshold of 1000 may be a good default. This seems to change wildly depending
+on the pokemon. Perhaps there's better metric... hue?
+
+# Shiny Shaymin with One Descriptor
+
+## Results
+
+### Plot
+
+![A scatter plot of encounters vs hue generated from a shiny Shaymin hunt with a single descriptor](./assets/shaymin-one-descriptor/plot.png)
+
+### Data
+
+[Data](./assets/shaymin-one-descriptor/data.json). The hues in the data are
+from printing every shiny pick during the hunt in RGB format, [see raw
+data](./assets/shaymin-one-descriptor/stdout.raw). I then converted that to HLS
+using `colorsys`. The hue values were kept from this result to plot.
+
+### Descriptor
+
+Descriptor used can be found [here](./assets/shaymin-one-descriptor/descriptor.json).
+
+### Introspection
+
+This was from an early version which used RGB euclidean distance for shiny
+detection on Shaymin.
+
+Due to light changes, whatever is macroing needs to maintain the time of day
+which the descriptor applies, or more than one descriptor needs to be executed
+against.
 
