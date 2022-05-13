@@ -1,5 +1,3 @@
-from detect import detect
-from pick import pick
 from pynput.keyboard import Listener as KBListener, Key
 from pynput.mouse import Listener as MouseListener, Button
 from threading import Thread
@@ -10,6 +8,8 @@ import pickle
 
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
+
+from util import detect, pick
 
 
 class IdentifierPicker(Thread):
