@@ -9,7 +9,8 @@ import pickle
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
-from util import detect, pick
+from api.detect import detect
+from api.pick import pick
 
 
 class IdentifierPicker(Thread):
