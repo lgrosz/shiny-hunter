@@ -2,5 +2,5 @@ tags
 tags.*
 
 __pycache__/
+*.egg-info/
 
-*.wav

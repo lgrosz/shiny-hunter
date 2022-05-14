@@ -6,7 +6,9 @@ import pickle
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
-from util import variance as aVariance, detect, pick
+from api.detect import detect
+from api.pick import pick
+from api.variance import variance as aVariance
 
 
 @click.option('--identifier_variance', type=int, default=1000, show_default=True, help='Allowed color variance. NOT IMPLEMENTED.')
