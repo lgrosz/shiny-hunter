@@ -2,6 +2,8 @@ import gi
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
+from api.variance import variance
+
 # TODO Add param "transform", which will transform the pixbuf's pixels to
 # something compatible with typeof color
 def detect(pos, color, _variance=0):

@@ -4,7 +4,7 @@ from threading import Thread
 from time import perf_counter
 import click
 import gi
-import pickle
+import json
 
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
@@ -33,7 +33,7 @@ class IdentifierPicker(Thread):
         if (pressed):
             pixbuf = Gdk.pixbuf_get_from_window(Gdk.get_default_root_window(), x, y, 1, 1)
             self.identifiers.append(((x, y), tuple(pixbuf.get_pixels()),))
-            click.echo(f'Picked {"#%02x%02x%02x" % self.identifiers[-1][1]}')
+            click.echo(f'Picked {"#%02x%02x%02x" % self.identifiers[-1][1]}', err=True)
             if (button == Button.left):
                 self.finished = True
         return False
@@ -64,30 +64,27 @@ class IdentifierEnder(Thread):
                     break;
 
 
-# TODO Need to version the package
-@click.option('--variance', type=int, default=0, help='Allowed color variance. NOT IMPLEMENTED.')
-@click.option('--file', type=str, help='File to save recording in. NOT IMPLEMENTED.')
+@click.option('--variance', type=int, default=0, help='Allowed color variance. Used when replaying to get perform shiny pick. NOT IMPLEMENTED.')
+@click.option('--file', type=click.File('w'), default='-', help='Path to file to save descriptor in.')
 @click.command(help='Records a shiny detector package. Saves to file.')
 def record(variance, file):
-    click.echo('Pick at least one identifer. Use right click to select more, left click to select the last one.')
+    click.echo('Pick at least one identifer. Use right click to select more, left click to select the last one.', err=True)
 
     identifiers = []
     picker = IdentifierPicker(identifiers)
     picker.start()
     picker.join()
 
-    click.echo('Attempting to resolve identity...')
+    click.echo('Attempting to resolve identity...', err=True)
     for i in identifiers:
         pos, color = i
         detect(pos, color)
     start = perf_counter()
-    click.echo('Identifiers resolved. Click the shiny color when available.')
+    click.echo('Identifiers resolved. Click the shiny color when available.', err=True)
 
     shiny_pick = pick()
     delay = perf_counter() - start
 
     package = (identifiers, delay, shiny_pick)
-    filename = 'record.pickle'
-    with open(filename, 'wb') as f:
-        f.write(pickle.dumps(package, protocol=pickle.HIGHEST_PROTOCOL))
+    file.write(json.dumps(package))
 

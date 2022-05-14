@@ -1,15 +1,14 @@
 import click
-import pickle
+import json
 
 @click.command(help='Describe a recording')
-@click.argument('file', type=click.File('rb'))
+@click.argument('file', default="-", type=click.File('r'))
 def describe(file):
-    specification = pickle.load(file)
-    identifiers, delay, shiny_pick = specification
+    identifiers, delay, shiny_pick = json.load(file)
     click.echo('Identifiers:')
     for i in identifiers:
         pos, color = i
-        click.echo(f'\t {"#%02x%02x%02x" % color} at {pos}')
+        click.echo(f'\t {"#%02x%02x%02x" % tuple(color)} at {tuple(pos)}')
     click.echo(f'Delay to shiny pick: {delay}')
-    click.echo(f'Non shiny: {"#%02x%02x%02x" % shiny_pick[1]} at {shiny_pick[0]}')
+    click.echo(f'Non shiny: {"#%02x%02x%02x" % tuple(shiny_pick[1])} at {tuple(shiny_pick[0])}')
 
