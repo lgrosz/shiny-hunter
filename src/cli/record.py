@@ -4,7 +4,8 @@ from threading import Thread
 from time import perf_counter
 import click
 import gi
-import json
+
+from api.descriptor import Descriptor
 
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
@@ -85,6 +86,6 @@ def record(variance, file):
     shiny_pick = pick()
     delay = perf_counter() - start
 
-    package = (identifiers, delay, shiny_pick)
-    file.write(json.dumps(package))
+    descriptor = Descriptor(identifiers, delay, shiny_pick)
+    file.write(descriptor.to_json())
 

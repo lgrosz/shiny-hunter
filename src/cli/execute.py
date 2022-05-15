@@ -1,11 +1,11 @@
 from time import sleep
 import click
 import gi
-import json
 
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
+from api.descriptor import Descriptor
 from api.detect import detect
 from api.pick import pick
 from api.variance import variance as aVariance
@@ -17,21 +17,21 @@ from api.variance import variance as aVariance
 @click.argument('file', default='-', type=click.File('r'))
 @click.command(help='Records a shiny detector package. Saves to file.')
 def execute(identifier_variance, shiny_variance, debounce, file):
-    identifiers, delay, shiny_pick = json.load(file)
+    descriptor = Descriptor.from_json(file.read())
 
     resets = 0
     found = False
 
     while not found:
         click.echo('Resolving identifers...')
-        for i in identifiers:
+        for i in descriptor.resolvers:
             pos, color = i
             detect(pos, color, _variance=identifier_variance)
 
         click.echo('Delaying for shiny pick...')
-        sleep(delay)
+        sleep(descriptor.pick_delay)
 
-        shiny_loc, shiny_color = shiny_pick
+        shiny_loc, shiny_color = descriptor.expected_pick
         pixbuf = Gdk.pixbuf_get_from_window(Gdk.get_default_root_window(), shiny_loc[0], shiny_loc[1], 1, 1)
         picked_color = tuple(pixbuf.get_pixels())
 
