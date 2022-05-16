@@ -83,9 +83,20 @@ def record(variance, file):
     start = perf_counter()
     click.echo('Identifiers resolved. Click the shiny color when available.', err=True)
 
-    shiny_pick = pick()
+    expected_color = []
+    expected_pos = []
+    def _selectColor(x, y, button, pressed):
+        expected_pos.append((x, y))
+        expected_color.append(pick(x, y))
+        return False
+
+    with MouseListener(
+        on_click=_selectColor
+    ) as l:
+        l.join()
+
     delay = perf_counter() - start
 
-    descriptor = Descriptor(identifiers, delay, shiny_pick)
+    descriptor = Descriptor(identifiers, delay, (expected_pos[0], expected_color[0]))
     file.write(descriptor.to_json())
 

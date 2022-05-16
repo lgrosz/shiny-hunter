@@ -7,7 +7,6 @@ from gi.repository import Gdk
 
 from api.descriptor import Descriptor
 from api.detect import detect
-from api.pick import pick
 from api.variance import variance as aVariance
 
 

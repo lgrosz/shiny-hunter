@@ -1,4 +1,5 @@
 import click
+from pynput.mouse import Listener as MouseListener
 
 from api.pick import pick as aPick
 
@@ -10,23 +11,20 @@ from api.pick import pick as aPick
               help='Print color as hex value')
 def pick(cformat):
     click.echo('Click to pick a color')
-    pos, color = aPick()
 
-    if cformat == 'hex':
-        color = '#%02x%02x%02x' % color
-    elif cformat == 'hsl':
-        # TODO implement
-        pass
-    elif cformat == 'hwb':
-        # TODO implement
-        pass
-    elif cformat == 'cmyk':
-        # TODO implement
-        pass
-    elif cformat == 'ncol':
-        # TODO implement
-        pass
+    color = []
 
-    click.echo(f'position={pos}')
-    click.echo(f'color={color}')
+    def _selectColor(x, y, button, pressed):
+        color.append(aPick(x, y))
+        return False
+
+    with MouseListener(
+        on_click=_selectColor
+    ) as l:
+        l.join()
+
+    if (len(color) > 0):
+        click.echo(color[0])
+    else:
+        click.echo('Failed to pick color', err=True)
 
