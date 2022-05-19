@@ -5,7 +5,7 @@ from sys import stderr
 
 
 # TODO SemVer
-DESCRIPTOR_VERSION = '0.1.0'
+DESCRIPTOR_VERSION = '0.1.1'
 
 class DescriptorJSONEncoder(JSONEncoder):
     def default(self, o):
@@ -27,6 +27,9 @@ class Descriptor():
     resolvers: list[tuple[tuple[int, int], tuple[int, int]]]
     pick_delay: float
     expected_pick: tuple[tuple[int, int], tuple[int, int]]
+    colormodel: str
+    scalars: [str]
+    variance: float
     version: str = DESCRIPTOR_VERSION
 
     @staticmethod
