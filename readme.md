@@ -8,6 +8,29 @@ No build, just run the python scripts.
 # TODO
 - Record video with my setup so I don't have to explain or forget it
 
+# Detecting shinies methodology
+
+Since the daytime can change the shiny color, we need an intelligent way of
+determining if something is shiny. We can get all the non-shiny colors just by
+doing a pick during each time of the day. This will get us a bound which we can
+say anything within this bound is non-shiny if and only if the shiny color for
+any given time of day does not fall within this bound.
+
+If we utilize the median value in this bound for the recording, we can
+determine a maximum allowed variance from this value.
+
+To ensure a shiny will successfully be picked from this max bound, find a
+source which displays both shiny and non-shiny variants and check the variance
+of the two colors. If this exceeds the max variance, a shiny will likely be
+chosen correctly.
+
+The goal is minimize the maximum allowed variance. If the maximum allowed
+variance is large then the timing delay to make the final shiny pick may be
+swayed enough to the point where the wrong color is picked from the screen.
+This will likely lead to false positive. If this is the case, the shiny hunt
+should only take place during the daytime cycle (10:00-19:59).
+
+
 # Imperical variance analysis
 Variance bounds:
 ```
