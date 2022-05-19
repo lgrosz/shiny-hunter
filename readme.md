@@ -30,6 +30,11 @@ swayed enough to the point where the wrong color is picked from the screen.
 This will likely lead to false positive. If this is the case, the shiny hunt
 should only take place during the daytime cycle (10:00-19:59).
 
+# Shaymin hunt
+- Set time to 10:00
+- Execute first
+- Then turn on the switch macro
+
 
 # Imperical variance analysis
 Variance bounds:
