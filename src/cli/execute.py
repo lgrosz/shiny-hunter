@@ -1,5 +1,6 @@
-from time import sleep
+from time import sleep, strftime
 import click
+import json
 
 from api.descriptor import Descriptor
 from api.detect import detect
@@ -13,7 +14,6 @@ from api.variance import variance as aVariance
               help='Override the descriptor colormodel by setting this.')
 @click.option('--scalar', 'scalars',
               type=str,
-              default=[],
               multiple=True,
               help='Override the descriptor scalars by setting these.')
 @click.option('--debounce', type=int, default=0, help='Second to debounce the identifier resolver after a (non)shiny pick')
@@ -29,32 +29,53 @@ def execute(variance, colormodel, scalars, debounce, file):
     if colormodel is not None:
         descriptor.colormodel = colormodel
 
-    if scalars is not None:
+    if len(scalars) != 0:
         descriptor.scalars = scalars
 
     resets = 0
     found = False
 
+    encounterLogs = []
+
     while not found:
-        click.echo('Resolving identifers...')
-        for i in descriptor.resolvers:
-            pos, color = i
-            detect(pos, color, descriptor.colormodel, descriptor.scalars, descriptor.variance)
+        try:
+            logdata = {
+                'encounter': resets,
+                'time': strftime("%Y%m%d-%H%M%S"),
+                'resolvers': [],
+                'pick': None
+            }
+            click.echo('Resolving identifers...')
+            for i in descriptor.resolvers:
+                pos, color = i
+                c = detect(pos, color, descriptor.colormodel, descriptor.scalars, descriptor.variance)
+                logdata['resolvers'].append(c)
 
-        click.echo('Delaying for shiny pick...')
-        sleep(descriptor.pick_delay)
+            click.echo('Delaying for shiny pick...')
+            sleep(descriptor.pick_delay)
 
-        shiny_loc, shiny_color = descriptor.expected_pick
-        picked_color = pick(*shiny_loc)
+            shiny_loc, shiny_color = descriptor.expected_pick
+            picked_color = pick(*shiny_loc)
+            click.echo(f'Picked {picked_color}')
 
-        click.echo(f'Picked {picked_color}')
-        if (aVariance(picked_color, shiny_color) > descriptor.variance):
-            found = True
-        else:
-            click.echo('Not shiny')
-            resets += 1
-            sleep(debounce)
+            logdata['pick'] = picked_color
+            encounterLogs.append(logdata)
+            if (aVariance(picked_color, shiny_color) > descriptor.variance):
+                found = True
+            else:
+                click.echo('Not shiny')
+                resets += 1
+                sleep(debounce)
+        except KeyboardInterrupt:
+            click.echo('Interrupted by user', err=True)
+            break
 
+    if (found):
+        click.echo(f'Found shiny in {resets} resets.')
 
-    click.echo(f'Found shiny in {resets} resets.')
+    with open(f'cli-execute_{strftime("%Y%m%d-%H%M%S")}.json', 'w') as f:
+        json.dump({
+            'descriptor': json.loads(descriptor.to_json()),
+            'encounters': encounterLogs
+        }, f)
 
