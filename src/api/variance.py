@@ -6,5 +6,7 @@ def variance(a, b):
     '''
     Takes finds the Euclidean distance between two points
     '''
+    if (len(a) != len(b)):
+        raise Exception('Can only calculate variance for vectors of the same size')
     return euclidean(a, b)
 

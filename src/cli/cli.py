@@ -1,8 +1,10 @@
 import click
 
+from .convert import convert
 from .describe import describe
 from .detect import detect
 from .execute import execute
+from .optimize_variance import optimize_variance
 from .pick import pick
 from .record import record
 from .variance import variance
@@ -17,6 +19,8 @@ cli.add_command(execute)
 cli.add_command(pick)
 cli.add_command(record)
 cli.add_command(variance)
+cli.add_command(convert)
+cli.add_command(optimize_variance)
 
 
 if __name__ == '__main__':
