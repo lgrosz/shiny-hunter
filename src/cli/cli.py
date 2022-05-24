@@ -8,6 +8,7 @@ from .optimize_variance import optimize_variance
 from .pick import pick
 from .record import record
 from .variance import variance
+from .fix_pick import fix_expected
 
 @click.group()
 def cli():
@@ -21,6 +22,7 @@ cli.add_command(record)
 cli.add_command(variance)
 cli.add_command(convert)
 cli.add_command(optimize_variance)
+cli.add_command(fix_expected)
 
 
 if __name__ == '__main__':

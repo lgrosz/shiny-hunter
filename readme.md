@@ -35,6 +35,13 @@ should only take place during the daytime cycle (10:00-19:59).
 - Execute first
 - Then turn on the switch macro
 
+# Darkrai hunt
+- Seemed good with rgb for the variance and the front of its collar
+
+# Common resolvers
+- Text box before encounter
+- White/black screen before fight scene
+- Trainer hat just before showing encountered pokemon
 
 # Imperical variance analysis
 Variance bounds:
