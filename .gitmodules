@@ -1,0 +1,3 @@
+[submodule "shiny-hunter.wiki"]
+	path = shiny-hunter.wiki
+	url = git@github.com:logbaseaofn/shiny-hunter.wiki.git
