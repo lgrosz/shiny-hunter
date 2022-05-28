@@ -73,7 +73,7 @@ class IdentifierEnder(Thread):
               type=str,
               default=[],
               multiple=True,
-              help='The pieces of the colormodel which to compute the variance. For example, to computer the variance of just hue, use `--colormodel hsl --scalar h`')
+              help='The pieces of the colormodel which to compute the variance. For example, to computer the variance of just hue, use `--colormodel hls --scalar h`')
 @click.option('--file', type=click.File('w'), default='-', help='Path to file to save descriptor in.')
 @click.command(help='Records a shiny detector package. Saves to file.')
 def record(variance, colormodel, scalars, file):

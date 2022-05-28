@@ -11,7 +11,7 @@ from api.variance import variance as aVariance
 
 RESET_PIN = 17
 
-@click.option('--variance', type=float, help='Override the descriptor color variance by setting this.')
+@click.option('--variance', type=float, help='Override the descriptor color variance by setting this. This will only apply to the final shiny pick. The resolvers variance are locked to 0.1.')
 @click.option('--colormodel',
               type=click.Choice(['rgb', 'hls']),
               help='Override the descriptor colormodel by setting this.')
@@ -58,7 +58,7 @@ def execute(variance, colormodel, scalars, debounce, controller_pin, file):
             click.echo('Resolving identifers...')
             for i in descriptor.resolvers:
                 pos, color = i
-                c = detect(pos, color, descriptor.colormodel, descriptor.scalars, descriptor.variance)
+                c = detect(pos, color, descriptor.colormodel, descriptor.scalars, 0.1)
                 logdata['resolvers'].append(c)
 
             click.echo('Delaying for shiny pick...')

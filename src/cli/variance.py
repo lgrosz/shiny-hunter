@@ -19,7 +19,7 @@ from .util import verify_scalars
               type=str,
               default=[],
               multiple=True,
-              help='The pieces of the colormodel which to compute the variance. For example, to computer the variance of just hue, use `--colormodel hsl --scalar h`')
+              help='The pieces of the colormodel which to compute the variance. For example, to computer the variance of just hue, use `--colormodel hls --scalar h`')
 @click.option('--color1', type=str, default='', help='First color to compare. If not populated one will need to be picked at runtime.')
 @click.option('--color2', type=str, default='', help='Second color to compare. If not populated one will need to be picked at runtime.')
 def variance(color1, color2, colormodel, scalars):
