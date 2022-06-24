@@ -9,6 +9,7 @@ from .pick import pick
 from .record import record
 from .variance import variance
 from .fix_pick import fix_expected
+from .fix_resolvers import fix_resolvers
 from .graph import graph
 
 @click.group()
@@ -24,6 +25,7 @@ cli.add_command(variance)
 cli.add_command(convert)
 cli.add_command(optimize_variance)
 cli.add_command(fix_expected)
+cli.add_command(fix_resolvers)
 cli.add_command(graph)
 
 

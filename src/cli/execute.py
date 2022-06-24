@@ -7,13 +7,14 @@ from api.descriptor import Descriptor
 from api.detect import detect
 from api.pick import pick
 from api.variance import variance as aVariance
+from api.change_basis import Bases
 
 
 RESET_PIN = 17
 
 @click.option('--variance', type=float, help='Override the descriptor color variance by setting this. This will only apply to the final shiny pick. The resolvers variance are locked to 0.1.')
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               help='Override the descriptor colormodel by setting this.')
 @click.option('--scalar', 'scalars',
               type=str,

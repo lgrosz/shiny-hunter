@@ -5,14 +5,14 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from api.change_basis import change_basis
+from api.change_basis import change_basis, Bases
 from api.descriptor import Descriptor
 
 
 @click.command(help='A 2D graph with hue on the y axis and encounters on x axis')
 @click.argument('logs', type=click.File('r'), nargs=-1)
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               default='hls',
               show_default=True,
               help='The colormodel which contains the scalar to be plotted')

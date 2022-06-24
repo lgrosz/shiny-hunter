@@ -2,7 +2,7 @@ from ast import literal_eval
 from pynput.mouse import Listener as MouseListener
 import click
 
-from api.change_basis import change_basis
+from api.change_basis import change_basis, Bases
 from api.pick import pick as aPick
 from api.variance import variance as aVariance
 
@@ -11,7 +11,7 @@ from .util import verify_scalars
 
 @click.command(help='Returns the variance of two rgb tuples with normalized values.')
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               default='rgb',
               show_default=True,
               help='The colormodel at which to compute the variance. An RGB colormodel must still be passed in')
@@ -48,8 +48,10 @@ def getColor():
     color = []
 
     def _selectColor(x, y, button, pressed):
-        color.append(aPick(x, y))
-        return False
+        if (pressed):
+            color.append(aPick(x, y))
+            return False
+        return True
 
     with MouseListener(
         on_click=_selectColor

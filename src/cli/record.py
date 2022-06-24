@@ -7,6 +7,7 @@ import click
 from api.descriptor import Descriptor
 from api.detect import detect
 from api.pick import pick
+from api.change_basis import Bases
 
 
 class IdentifierPicker(Thread):
@@ -65,7 +66,7 @@ class IdentifierEnder(Thread):
 
 @click.option('--variance', type=float, default=0, help='Allowed color variance. Used when replaying to get perform shiny pick.')
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               default='rgb',
               show_default=True,
               help='The colormodel at which to compute the variance. An RGB colormodel must still be passed in')
@@ -87,7 +88,7 @@ def record(variance, colormodel, scalars, file):
     click.echo('Attempting to resolve identity...', err=True)
     for i in identifiers:
         pos, color = i
-        detect(pos, color, colormodel, scalars, variance)
+        detect(pos, color, colormodel, scalars, 0.1)
         click.echo(f'Resolved identifier {i}', err=True)
     start = perf_counter()
     click.echo('Identifiers resolved. Click the shiny color when available.', err=True)

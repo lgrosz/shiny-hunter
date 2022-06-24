@@ -3,7 +3,7 @@ from pynput.mouse import Listener as MouseListener
 from statistics import mean
 import click
 
-from api.change_basis import change_basis
+from api.change_basis import change_basis, Bases
 from api.pick import pick as aPick
 from api.variance import variance as aVariance
 
@@ -13,7 +13,7 @@ from .util import verify_scalars
 # TODO This can possibly optimize colormodel and scalars as well
 @click.command(help='Takes many rgb tuples and calculates their maximum variance')
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               default='rgb',
               show_default=True,
               help='The colormodel to convert to')

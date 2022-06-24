@@ -2,7 +2,7 @@ from ast import literal_eval
 from pynput.mouse import Listener as MouseListener
 import click
 
-from api.change_basis import change_basis
+from api.change_basis import change_basis, Bases
 from api.pick import pick as aPick
 from api.variance import variance as aVariance
 
@@ -11,7 +11,7 @@ from .util import verify_scalars
 
 @click.command(help='Converts a given rgb tuple to the provided colormodel reduced to the given scalars')
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               default='rgb',
               show_default=True,
               help='The colormodel to convert to')

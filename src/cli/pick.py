@@ -3,10 +3,11 @@ from pynput.mouse import Listener as MouseListener
 import click
 
 from api.pick import pick as aPick
+from api.change_basis import Bases, change_basis
 
 @click.command(help='Pick color at screen position')
 @click.option('--colormodel',
-              type=click.Choice(['rgb', 'hls']),
+              type=click.Choice(Bases),
               default='rgb',
               show_default=True,
               help='Print color in specific colormodel')
@@ -25,11 +26,7 @@ def pick(colormodel):
         l.join()
 
     if (len(color) > 0):
-        if (colormodel == 'rgb'):
-            click.echo(color[0])
-        elif (colormodel == 'hls'):
-            click.echo(rgb_to_hls(*color[0]))
-
+        click.echo(change_basis(color[0], colormodel, colormodel))
     else:
         click.echo('Failed to pick color', err=True)
 
