@@ -42,12 +42,12 @@ def hue_v_encounter(colormodel, scalar, logs):
         if (len(hashes) > 1):
             ax[idx].scatter(reset_count, y, c=colors)
             ax[idx].set_xlabel('Encounters')
-            ax[idx].set_ylabel('Hue')
+            ax[idx].set_ylabel(scalar)
             ax[idx].set_title(f'Descriptor {idx+1}')
         else:
             ax.scatter(reset_count, y, c=colors)
             ax.set_xlabel('Encounters')
-            ax.set_ylabel('Hue')
+            ax.set_ylabel(scalar)
 
 
     plt.show()
