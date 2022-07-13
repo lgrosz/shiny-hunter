@@ -2,6 +2,7 @@ from ast import literal_eval
 from pynput.mouse import Listener as MouseListener
 from statistics import mean
 import click
+import json
 
 from api.change_basis import change_basis, Bases
 from api.pick import pick as aPick
@@ -22,13 +23,21 @@ from .util import verify_scalars
               default=[],
               multiple=True,
               help='The scarals of the colormodel to reduce the span to')
-@click.argument('colors', type=str, required=True, nargs=-1)
-def optimize_variance(colormodel, scalars, colors):
+@click.argument('logs', type=click.File('r'), required=True, nargs=-1)
+def optimize_variance(colormodel, scalars, logs):
     if (scalars and not verify_scalars(colormodel, scalars)):
         click.echo('Invalid scalars provided', err=True)
         return
 
-    colors = list(map(lambda color: literal_eval(color), colors))
+    logs = list(map(lambda log: json.load(log), logs))
+
+    # Parse picked colors from all encounters
+    colors = []
+    for log in logs:
+        encounters = log['encounters']
+        for encounter in encounters:
+            r, g, b = encounter['pick']
+            colors.append((r, g, b))
 
     distances = []
     for i, color1 in enumerate(colors):
